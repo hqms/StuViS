@@ -1,0 +1,71 @@
+The /stuvis/stuvis/tests/Feature directory is intended for feature tests. Since you requested the contents for this directory, I will create a sample feature test file that could be used to test the functionality of the Student Violation System.
+
+Here is the content for a sample feature test file named `ViolationTest.php`:
+
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\User;
+use App\Models\Violation;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class ViolationTest extends TestCase
+{
+    use RefreshDatabase;
+
+    /** @test */
+    public function an_admin_can_create_a_violation()
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $violationData = [
+            'student_id' => 1,
+            'type' => 'Late Submission',
+            'description' => 'The student submitted the assignment late.',
+            'severity' => 'medium',
+        ];
+
+        $response = $this->actingAs($admin)->post('/violations', $violationData);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('violations', $violationData);
+    }
+
+    /** @test */
+    public function a_teacher_can_view_violations()
+    {
+        $teacher = User::factory()->create(['role' => 'teacher']);
+        $violation = Violation::factory()->create();
+
+        $response = $this->actingAs($teacher)->get('/violations');
+
+        $response->assertStatus(200);
+        $response->assertSee($violation->description);
+    }
+
+    /** @test */
+    public function a_student_can_view_their_own_violations()
+    {
+        $student = User::factory()->create(['role' => 'student']);
+        $violation = Violation::factory()->create(['student_id' => $student->id]);
+
+        $response = $this->actingAs($student)->get('/violations');
+
+        $response->assertStatus(200);
+        $response->assertSee($violation->description);
+    }
+
+    /** @test */
+    public function a_parent_can_view_their_childs_violations()
+    {
+        $parent = User::factory()->create(['role' => 'parent']);
+        $student = User::factory()->create(['role' => 'student']);
+        $violation = Violation::factory()->create(['student_id' => $student->id]);
+
+        $response = $this->actingAs($parent)->get('/violations');
+
+        $response->assertStatus(200);
+        $response->assertSee($violation->description);
+    }
+}

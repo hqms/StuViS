@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\User;
+use App\Models\Violation;
+
+class ViolationPolicy
+{
+    /**
+     * Determine whether the user can view any violations.
+     */
+    public function viewAny(User $user)
+    {
+        return $user->hasRole('Administrator') || $user->hasRole('Teacher');
+    }
+
+    /**
+     * Determine whether the user can view the violation.
+     */
+    public function view(User $user, Violation $violation)
+    {
+        return $user->hasRole('Administrator') || 
+               ($user->hasRole('Teacher') && $user->id === $violation->teacher_id) || 
+               ($user->hasRole('Student') && $user->id === $violation->student_id);
+    }
+
+    /**
+     * Determine whether the user can create violations.
+     */
+    public function create(User $user)
+    {
+        return $user->hasRole('Teacher');
+    }
+
+    /**
+     * Determine whether the user can update the violation.
+     */
+    public function update(User $user, Violation $violation)
+    {
+        return $user->hasRole('Administrator') || 
+               ($user->hasRole('Teacher') && $user->id === $violation->teacher_id);
+    }
+
+    /**
+     * Determine whether the user can delete the violation.
+     */
+    public function delete(User $user, Violation $violation)
+    {
+        return $user->hasRole('Administrator') || 
+               ($user->hasRole('Teacher') && $user->id === $violation->teacher_id);
+    }
+}
