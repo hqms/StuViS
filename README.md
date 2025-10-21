@@ -38,7 +38,7 @@ A lightweight web application to record, manage, and report student violations. 
 
 1. Clone repository
 ```bash
-git clone <repo-url> stuvis
+git clone git@github.com:hqms/StuViS.git stuvis
 cd stuvis
 ```
 
@@ -121,4 +121,5 @@ php artisan test
 MIT
 
 ## Maintainers
-- Project team (add maintainers/contact in repo)
+- [hqms](https://github.com/hqms)
+- [zhafranmrakha-netizen](https://github.com/zhafranmrakha-netizen)
