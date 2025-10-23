@@ -2,13 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ViolationController;
 
-// API routes for the Student Violation System
 
-Route::middleware('api')->group(function () {
-    // Routes for managing violations
-    Route::apiResource('violations', ViolationController::class);
+Route::apiResource('parent', App\Http\Api\Controllers\ParentController::class);
+Route::apiResource('users', App\Http\Api\Controllers\UserController::class);
+Route::apiResource('student', App\Http\Api\Controllers\StudentController::class);
 
-    // Additional routes can be added here
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
 });

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('violation', function (Blueprint $table) {
+        Schema::create('violations', function (Blueprint $table) {
             $table->id();
             $table->string('type');
             $table->string('severity');
@@ -20,8 +20,8 @@ return new class extends Migration
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('violation_type_id');
             
-            $table->foreign('student_id')->references('id')->on('student')->onDelete('no action');
-            $table->foreign('violation_type_id')->references('id')->on('violation_type')->onDelete('no action');
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('no action');
+            $table->foreign('violation_type_id')->references('id')->on('violation_types')->onDelete('no action');
 
             $table->timestamps();
         });
